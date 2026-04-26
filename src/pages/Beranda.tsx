@@ -129,7 +129,8 @@ export default function Beranda() {
       </section>
 
       {/* EVENT SECTIONS */}
-      {eventSections.map((ev, idx) => (
+      {/* Parameter 'idx' dihapus untuk memperbaiki error TS6133 */}
+      {eventSections.map((ev) => (
         <section key={ev.title} className={`py-12 relative overflow-hidden ${ev.bg === "pink" ? "bg-[#fce8ef]" : "bg-white"}`}>
           {ev.bg === "pink" && (
             <>
