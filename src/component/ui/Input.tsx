@@ -6,17 +6,26 @@ interface InputProps {
   register: any; 
   error?: string;
   type?: string; 
+  placeholder?: string; // <--- Tambahkan ini agar tidak error
 }
 
-const Input: React.FC<InputProps> = ({ label, name, register, error, type = "text" }) => {
+const Input: React.FC<InputProps> = ({ 
+  label, 
+  name, 
+  register, 
+  error, 
+  type = "text", 
+  placeholder // <--- Ambil dari props
+}) => {
   return (
     <div className="flex flex-col mb-4">
       <label htmlFor={name} className="font-semibold mb-1">
         {label}
       </label>
       <input
-        id={name} // Penting: id harus sama dengan htmlFor pada label
-        type={type} // Menggunakan variable type (bisa text atau password)
+        id={name}
+        type={type}
+        placeholder={placeholder} // <--- Pasang di atribut input
         {...register(name)}
         className={`border p-2 rounded ${error ? "border-red-500" : "border-gray-300"}`}
       />
