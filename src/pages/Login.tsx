@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { useAuthStore } from "./store/useAuthStore"; 
+import Input from "../component/ui/Input";
 
 type FormData = {
   email: string;
@@ -18,12 +19,9 @@ const schema = z.object({
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate(); 
+  const login = useAuthStore((state) => state.login);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -32,11 +30,14 @@ export default function Login() {
     
     setTimeout(() => {
       setIsLoading(false);
-      console.log("Data Login:", data);
       
-      alert("Login Berhasil! Mengalihkan...");
-
-      navigate("/"); 
+      if (data.email && data.password) {
+        alert("Login Berhasil!");
+        login(data.email); 
+        navigate("/dashboard");
+      } else {
+        alert("Login gagal, silakan periksa kembali data anda");
+      }
     }, 2000);
   };
 
@@ -47,49 +48,41 @@ export default function Login() {
         <p className="text-gray-400 mt-3 text-base">Silakan login untuk melanjutkan</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Email</label>
-          <input
-            {...register("email")}
-            type="email"
-            disabled={isLoading}
-            className={`w-full px-4 py-3.5 border rounded-xl outline-none transition-all placeholder:text-slate-300 ${
-              errors.email ? "border-red-500 bg-red-50" : "border-slate-200 focus:border-[#7B1D3F]"
-            }`}
-            placeholder="email@anda.com"
-          />
-          {errors.email && <p className="text-red-500 text-xs mt-2 pl-1">{errors.email.message}</p>}
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6" noValidate>
+        <Input 
+          label="Email" 
+          name="email" 
+          register={register} 
+          error={errors.email?.message}
+          placeholder="email@anda.com"
+        />
 
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Password</label>
-          <input
-            type="password"
-            {...register("password")}
-            disabled={isLoading}
-            className={`w-full px-4 py-3.5 border rounded-xl outline-none transition-all placeholder:text-slate-300 ${
-              errors.password ? "border-red-500 bg-red-50" : "border-slate-200 focus:border-[#7B1D3F]"
-            }`}
-            placeholder="........"
-          />
-          {errors.password && <p className="text-red-500 text-xs mt-2 pl-1">{errors.password.message}</p>}
-        </div>
+        <Input 
+          label="Password" 
+          name="password" 
+          type="password" 
+          register={register} 
+          error={errors.password?.message}
+          placeholder="........"
+        />
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-[#832B49] text-white py-4 rounded-xl font-bold hover:bg-[#6a223b] flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98] disabled:bg-slate-300"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="animate-spin" size={20} />
-              Memproses...
-            </>
-          ) : (
-            "Login"
-          )}
-        </button>
+        <div className="pt-2 flex flex-col gap-4">
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full bg-[#7B1D3F] text-white py-4 rounded-xl font-bold hover:bg-[#5a1530] transition-all disabled:bg-gray-300"
+          >
+            {isLoading ? "Memproses..." : "Login"}
+          </button>
+
+          <button 
+            type="button"
+            onClick={() => navigate("/")}
+            className="w-full bg-white text-[#7B1D3F] py-4 rounded-xl font-bold border-2 border-[#7B1D3F] hover:bg-rose-50 transition-all shadow-sm"
+          >
+            Kembali ke Beranda
+          </button>
+        </div>
 
         <div className="text-sm text-center text-slate-500 pt-2">
           Belum punya akun? <Link to="/register" className="text-[#7B1D3F] font-bold hover:underline">Daftar</Link>

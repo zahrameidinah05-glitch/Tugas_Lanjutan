@@ -15,8 +15,8 @@ const Input: React.FC<InputProps> = ({ label, name, register, error, type = "tex
         {label}
       </label>
       <input
-        id={name} 
-        type={type} 
+        id={name} // Penting: id harus sama dengan htmlFor pada label
+        type={type} // Menggunakan variable type (bisa text atau password)
         {...register(name)}
         className={`border p-2 rounded ${error ? "border-red-500" : "border-gray-300"}`}
       />

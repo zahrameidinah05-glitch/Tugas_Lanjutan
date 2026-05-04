@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react"; // Perbaikan: useState diimpor di sini
 
 interface InputPasswordProps {
   label: string;
@@ -8,6 +8,7 @@ interface InputPasswordProps {
 }
 
 const InputPassword: React.FC<InputPasswordProps> = ({ label, name, register, error }) => {
+  // Perbaikan 1: Gunakan [] bukan {} untuk useState
   const [show, setShow] = useState<boolean>(false);
 
   return (
@@ -19,11 +20,13 @@ const InputPassword: React.FC<InputPasswordProps> = ({ label, name, register, er
       <div className="relative flex items-center">
         <input
           id={name}
+          // Input type berubah dinamis berdasarkan state show
           type={show ? "text" : "password"} 
           {...register(name)}
           className={`border p-2 rounded w-full ${error ? "border-red-500" : "border-gray-300"}`}
         />
         
+        {/* Perbaikan 2: Tambahkan type="button" agar tidak men-submit form secara tidak sengaja */}
         <button 
           type="button" 
           onClick={() => setShow(!show)}
