@@ -31,12 +31,17 @@ export default function Login() {
     setTimeout(() => {
       setIsLoading(false);
       
-      if (data.email && data.password) {
+      // Logika pengecekan email dan password statis
+      if (
+        data.email === "zahrameidinah05@gmail.com" && 
+        data.password === "24090001"
+      ) {
         alert("Login Berhasil!");
         login(data.email); 
         navigate("/dashboard");
       } else {
-        alert("Login gagal, silakan periksa kembali data anda");
+        // Jika tidak cocok, tampilkan pesan error
+        alert("Email atau password salah! Silakan coba lagi.");
       }
     }, 2000);
   };
